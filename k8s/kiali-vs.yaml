@@ -1,0 +1,39 @@
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: kiali-vs
+  namespace: istio-ingress
+spec:
+  gateways:
+    - gateway
+  hosts:
+    - "*"
+  http:
+    - match:
+        - uri:
+            prefix: /kiali
+      rewrite:
+        uri: /
+      route:
+        - destination:
+            host: kiali.istio-system.svc.cluster.local
+            port:
+              number: 20001
+      corsPolicy:
+        allowCredentials: true
+        allowHeaders:
+          - "*"
+        allowMethods:
+          - GET
+          - POST
+          - PUT
+          - PATCH
+          - DELETE
+          - OPTIONS
+        allowOrigins:
+          - exact: https://prod.windeath44.wiki
+          - exact: https://windeath44.wiki
+          - exact: https://www.prod.windeath44.wiki
+        exposeHeaders:
+          - "*"
+        maxAge: 24h

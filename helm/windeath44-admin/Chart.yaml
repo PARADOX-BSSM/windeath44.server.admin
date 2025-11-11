@@ -1,0 +1,22 @@
+apiVersion: v2
+name: admin
+description: A Helm chart for Admin Dashboard with Istio integration
+type: application
+version: 0.1.0
+appVersion: "1.0.0"
+home: https://github.com/windeath44/admin-dashboard
+sources:
+  - https://github.com/windeath44/admin-dashboard
+maintainers:
+  - name: Windeath44 Team
+    email: admin@windeath44.local
+keywords:
+  - admin
+  - dashboard
+  - monitoring
+  - kubernetes
+  - istio
+annotations:
+  category: Infrastructure
+  licenses: MIT
+dependencies: []

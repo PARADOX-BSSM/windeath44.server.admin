@@ -1,0 +1,51 @@
+apiVersion: security.istio.io/v1
+kind: AuthorizationPolicy
+metadata:
+  name: monitoring-auth
+  namespace: istio-ingress
+spec:
+  action: DENY
+  rules:
+  - to:
+    - operation:
+        paths:
+        - "/grafana*"
+        - "/jaeger*" 
+        - "/kiali*"
+        - "/prometheus*"
+        - "/alertmanager*"
+        - "/admin/grafana*"
+        - "/admin/jaeger*"
+        - "/admin/kiali*"
+        - "/admin/prometheus*"
+        - "/admin/alertmanager*"
+        ports: ["80", "443"]
+    when:
+    - key: request.headers[cookie]
+      notValues: ["*auth_token=*"]
+---
+apiVersion: security.istio.io/v1
+kind: AuthorizationPolicy  
+metadata:
+  name: monitoring-allow-admin
+  namespace: istio-ingress
+spec:
+  action: ALLOW
+  rules:
+  - to:
+    - operation:
+        paths:
+        - "/grafana*"
+        - "/jaeger*"
+        - "/kiali*"
+        - "/prometheus*"
+        - "/alertmanager*"
+        - "/admin/grafana*"
+        - "/admin/jaeger*"
+        - "/admin/kiali*"
+        - "/admin/prometheus*"
+        - "/admin/alertmanager*"
+        ports: ["80", "443"]
+    when:
+    - key: request.headers[cookie]
+      values: ["*auth_token=*"]
