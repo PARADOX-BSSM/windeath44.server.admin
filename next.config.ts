@@ -15,10 +15,8 @@ const nextConfig: NextConfig = {
   
   // Environment variables
   env: {
-    NEXT_PUBLIC_K8S_NAMESPACE: process.env.NEXT_PUBLIC_K8S_NAMESPACE || 'monitoring',
     NEXT_PUBLIC_APP_NAME: process.env.NEXT_PUBLIC_APP_NAME || 'windeath44-admin',
     NEXT_PUBLIC_APP_VERSION: process.env.NEXT_PUBLIC_APP_VERSION || '1.0.0',
-    NEXT_PUBLIC_CLUSTER_NAME: process.env.NEXT_PUBLIC_CLUSTER_NAME || 'windeath44-cluster',
   },
   
   // Headers for security
@@ -54,21 +52,6 @@ const nextConfig: NextConfig = {
       // Services will be handled directly by the frontend
     ];
   },
-  
-  // Webpack configuration for Kubernetes client
-  webpack: (config, { isServer }) => {
-    if (isServer) {
-      // Exclude Kubernetes client from client-side bundle
-      config.externals = config.externals || [];
-      config.externals.push('@kubernetes/client-node');
-    }
-    
-    return config;
-  },
-  
-  // Server external packages
-  serverExternalPackages: ['@kubernetes/client-node'],
-  
   // ESLint configuration
   eslint: {
     ignoreDuringBuilds: true,
