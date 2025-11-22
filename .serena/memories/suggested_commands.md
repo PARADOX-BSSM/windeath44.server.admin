@@ -1,0 +1,5 @@
+- `npm install` – install dependencies before working.
+- `npm run dev` / `npm run dev:turbo` – start the Next.js dev server (Turbopack optional) at http://localhost:3000.
+- `npm run build` or `npm run build:turbo` – production build, fails on type/lint issues.
+- `npm run start` – serve the optimized build locally (Docker parity check).
+- `npm run lint` – run Next/core-web-vitals ESLint rules.
