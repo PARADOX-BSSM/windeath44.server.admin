@@ -1,0 +1,4 @@
+- TypeScript-first: prefer `.tsx` for UI and `.ts` utilities, avoid default exports.
+- Use two-space indentation, grouped imports (Node/React/local). Client components must start with `'use client';`.
+- Zustand hooks follow `useThingStore` naming; other dashboard state currently uses local JSON.
+- Follow ESLint (Next core web vitals) formatting guidance; Tailwind v4 utilities stay in `className` strings rather than CSS files.
