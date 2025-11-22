@@ -4,8 +4,8 @@ import { useState } from 'react';
 import { getAuthHeaders } from '@/app/lib/auth';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import Header from '../../../components/ui/Header';
-import Sidebar from '../../../components/ui/Sidebar';
+import Header from '../../../../components/ui/Header';
+import Sidebar from '../../../../components/ui/Sidebar';
 
 interface FormData {
   userId: string;

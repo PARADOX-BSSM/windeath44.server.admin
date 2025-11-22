@@ -1,0 +1,1 @@
+Before finishing a task: run `npm run lint` and the relevant tests (Playwright/Vitest when available), plus `npm run build` if preparing a PR. Document any skipped cases and include evidence of build/lint/test runs along with screenshots for UI updates and rollback considerations in the PR summary.
