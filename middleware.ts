@@ -77,8 +77,8 @@ export async function middleware(request: NextRequest) {
     }
   }
 
-  // 기본 /admin 경로는 /admin/dashboard로 리다이렉트
-  if (pathname === '/admin') {
+  // 루트 경로를 /admin/dashboard로 리다이렉트
+  if (pathname === '/') {
     const dashboardUrl = new URL('/admin/dashboard', request.url);
     return NextResponse.redirect(dashboardUrl);
   }
@@ -88,6 +88,7 @@ export async function middleware(request: NextRequest) {
 
 export const config = {
   matcher: [
-    '/admin/:path*',
+    '/',
+    '/admin/dashboard/:path*',
   ],
 };
