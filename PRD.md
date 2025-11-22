@@ -12,8 +12,9 @@
 - **경영진/리더십**: 단일 진입점에서 시스템 전반의 맥락(활성 모더레이터 수, 플래그 현황, 사용자 통계 등)을 공유받습니다.
 
 ## 시스템 구성
-- **프런트엔드**: React 19 + Tailwind v4. `AdminOverview`가 Header/Sidebar/카드를 포함한 UI를 단일 소스로 제공합니다.
-- **인증 레이어**: `/admin/dashboard/auth/login`이 upstream 인증 API에 로그인 요청을 보내고 토큰을 쿠키/로컬스토리지에 저장합니다. `middleware.ts`가 `/admin/**` 접근 시 `auth_token` 존재를 검사합니다.
+- **프런트엔드**: React 19 + Tailwind CSS v3. `AdminOverview`가 Header/Sidebar/카드를 포함한 UI를 단일 소스로 제공합니다.
+- **라우팅 구조**: Next.js의 `basePath: '/admin/dashboard'` 설정을 통해 모든 페이지, CSS, JavaScript, 이미지 등의 정적 자산들이 `/admin/dashboard` 하위 경로에서 서비스됩니다. 이를 통해 다른 관리자 시스템과의 경로 충돌을 방지하고 독립적인 관리 포털을 구축합니다.
+- **인증 레이어**: `/admin/dashboard/auth/login`이 upstream 인증 API에 로그인 요청을 보내고 토큰을 쿠키/로컬스토리지에 저장합니다. `middleware.ts`가 `/admin/dashboard/**` 접근 시 `auth_token` 존재를 검사합니다.
 - **서버 라우트**: `/api/auth/verify`가 RS256(JWKS) 기반 JWT 검증을 처리하고 `/api/health`가 버전·메모리·환경 값을 노출합니다.
 - **외부 툴 연동**: Sidebar/Observability Shortcut 카드가 Grafana/Argo CD/Kiali/Prometheus/Kafka UI 링크를 새 창으로 띄우며 URL은 환경 변수나 상수로 관리합니다.
 
