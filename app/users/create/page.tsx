@@ -220,7 +220,7 @@ export default function CreateAdminPage() {
                   </p>
                   <Link
                     href="/users"
-                    className="inline-flex items-center justify-center px-8 py-3 bg-[var(--foreground)] text-[var(--inverse-foreground)] text-xs font-bold tracking-[0.2em] uppercase hover:opacity-90 transition-all duration-300"
+                    className="inline-flex items-center justify-center px-8 py-3 bg-[var(--foreground)] text-xs font-bold tracking-[0.2em] uppercase hover:opacity-90 transition-all duration-300 btn-text-inverse"
                   >
                     Return to Users
                   </Link>
@@ -454,7 +454,7 @@ export default function CreateAdminPage() {
                       <button
                         type="submit"
                         disabled={loading}
-                        className="flex-[2] px-6 py-3 bg-[var(--foreground)] text-[var(--inverse-foreground)] rounded-lg text-xs font-bold hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed uppercase tracking-wider transition-all shadow-[0_0_20px_rgba(255,255,255,0.1)]"
+                        className="flex-[2] px-6 py-3 bg-[var(--foreground)] rounded-lg text-xs font-bold hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed uppercase tracking-wider transition-all shadow-[0_0_20px_rgba(255,255,255,0.1)] btn-text-inverse"
                       >
                         {loading ? 'Provisioning...' : 'Create Admin Account'}
                       </button>

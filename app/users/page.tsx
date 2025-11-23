@@ -134,10 +134,10 @@ export default function UsersPage() {
                 </div>
                 <Link
                   href="/users/create"
-                  className="group relative px-6 py-3 bg-[var(--foreground)] text-xs font-bold tracking-[0.2em] rounded-xl hover:scale-105 transition-all duration-300 shadow-[0_0_20px_rgba(0,0,0,0.1)] hover:shadow-[0_0_30px_rgba(0,0,0,0.2)] overflow-hidden uppercase flex items-center gap-3 border border-[var(--foreground)]/10"
+                  className="group relative px-6 py-3 bg-[var(--foreground)] text-xs font-bold tracking-[0.2em] rounded-xl hover:scale-105 transition-all duration-300 shadow-[0_0_20px_rgba(0,0,0,0.1)] hover:shadow-[0_0_30px_rgba(0,0,0,0.2)] overflow-hidden uppercase flex items-center gap-3 border border-[var(--foreground)]/10 btn-text-inverse"
                 >
-                  <span className="relative z-10 text-[var(--inverse-foreground)] group-hover:text-white transition-colors">Create Admin</span>
-                  <svg className="w-3 h-3 relative z-10 text-[var(--inverse-foreground)] group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <span className="relative z-10">Create Admin</span>
+                  <svg className="w-3 h-3 relative z-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4" />
                   </svg>
                   <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700" />
