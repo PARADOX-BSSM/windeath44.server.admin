@@ -83,7 +83,7 @@ export default function AdminLoginPage() {
 
           const profileData = await profileResponse.json();
 
-          if (profileData.role !== 'ADMIN') {
+          if (profileData.data.role !== 'ADMIN') {
             throw new Error('Access denied: Admins only');
           }
 
