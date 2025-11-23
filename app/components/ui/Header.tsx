@@ -44,7 +44,7 @@ export default function Header() {
           onClick={() => {
             document.cookie = 'auth_token=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
             document.cookie = 'auth_token=; path=/admin/dashboard; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
-            window.location.href = '/auth/login';
+            window.location.href = '/admin/dashboard/auth/login';
           }}
           className="text-[10px] font-bold tracking-[0.2em] text-[var(--foreground)]/40 hover:text-red-400 uppercase transition-colors"
         >

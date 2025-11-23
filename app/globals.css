@@ -106,6 +106,12 @@
   color: #000000 !important;
 }
 
+/* Exception for button text that needs to be white on dark backgrounds */
+[data-theme='light'] .btn-text-inverse,
+[data-theme='light'] .btn-text-inverse * {
+  color: #ffffff !important;
+}
+
 body {
   color: var(--foreground);
   background: var(--background);
