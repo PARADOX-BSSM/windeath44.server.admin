@@ -70,6 +70,23 @@ export default function AdminLoginPage() {
         }
 
         if (token) {
+          // Verify Admin Role
+          const profileResponse = await fetch('https://prod.windeath44.wiki/api/users/profile', {
+            headers: {
+              'Authorization': `Bearer ${token}`,
+            },
+          });
+
+          if (!profileResponse.ok) {
+            throw new Error('Failed to verify user profile');
+          }
+
+          const profileData = await profileResponse.json();
+
+          if (profileData.role !== 'ADMIN') {
+            throw new Error('Access denied: Admins only');
+          }
+
           const expirationDate = new Date(Date.now() + 15 * 60 * 1000);
           const expires = expirationDate.toUTCString();
           const domain = window.location.hostname;
