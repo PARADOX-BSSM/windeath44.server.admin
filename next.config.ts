@@ -3,13 +3,10 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   // Base path for all routes and assets
   basePath: '/admin/dashboard',
-
+  
   // Output configuration for Docker builds
   output: 'standalone',
-
-  // Fix multiple lockfiles warning
-  outputFileTracingRoot: __dirname,
-
+  
   // ESLint configuration
   eslint: {
     ignoreDuringBuilds: true,

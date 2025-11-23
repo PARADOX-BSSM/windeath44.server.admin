@@ -21,14 +21,14 @@ const quickActions = [
   {
     title: 'Manage Users',
     description: 'View user accounts, roles, and activity status.',
-    href: '/users',
-    cta: 'VIEW USERS',
+    href: '/admin/dashboard/users',
+    cta: 'View users',
   },
   {
     title: 'Create Admin Account',
     description: 'Set up new administrator accounts with proper verification.',
-    href: '/users/create',
-    cta: 'CREATE ADMIN',
+    href: '/admin/dashboard/users/create',
+    cta: 'Create admin',
   },
 ];
 
