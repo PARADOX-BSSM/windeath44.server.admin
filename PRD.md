@@ -17,6 +17,18 @@
 - **서버 라우트**: `/api/auth/verify`가 RS256(JWKS) 기반 JWT 검증을 처리하고 `/api/health`가 버전·메모리·환경 값을 노출합니다.
 - **외부 툴 연동**: Sidebar/Observability Shortcut 카드가 Grafana/Argo CD/Kiali/Prometheus/Kafka UI 링크를 새 창으로 띄우며 URL은 환경 변수나 상수로 관리합니다.
 
+## 라우팅 & Base Path 설정 (Routing & Base Path Configuration)
+- **Base Path**: `/admin/dashboard`
+  - 모든 내부 라우트와 에셋 경로는 이 Base Path를 기준으로 동작해야 합니다.
+  - `next.config.ts`에 `basePath: '/admin/dashboard'`가 설정되어 있습니다.
+- **링크 처리**:
+  - `next/link` 컴포넌트 사용 시 Next.js가 자동으로 Base Path를 처리하므로 `/users`와 같이 작성하면 실제로는 `/admin/dashboard/users`로 렌더링됩니다.
+  - `window.location`이나 일반 `<a>` 태그를 사용할 경우 반드시 Base Path를 포함해야 합니다.
+  - `useRouter().push()` 사용 시에도 자동으로 Base Path가 적용됩니다.
+- **에셋 처리**:
+  - `public` 폴더의 이미지를 참조할 때는 `/admin/dashboard/images/...`와 같이 Base Path를 포함한 절대 경로를 사용해야 합니다.
+  - CSS `url()` 사용 시에도 Base Path를 고려해야 합니다.
+
 ## 기능 요구사항
 1. **사용자 관리 (User Management)**
    - **어드민 계정 생성**: 새로운 관리자 계정 생성을 위한 완전한 워크플로우를 제공해야 합니다:
