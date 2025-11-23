@@ -6,29 +6,29 @@ import Sidebar from '../ui/Sidebar';
 import { observabilityConfig } from '../../config/observability';
 
 const highlightStats = [
-  { label: 'Open Incidents', value: '5', helper: '2 critical' },
-  { label: 'Active Moderators', value: '7', helper: '2 on duty' },
-  { label: 'Access Requests', value: '12', helper: 'awaiting review' },
+  { label: 'OPEN INCIDENTS', value: '5', helper: '2 CRITICAL', color: 'text-red-400' },
+  { label: 'ACTIVE MODERATORS', value: '7', helper: '2 ON DUTY', color: 'text-emerald-400' },
+  { label: 'ACCESS REQUESTS', value: '12', helper: 'AWAITING REVIEW', color: 'text-blue-400' },
 ];
 
 const quickActions = [
   {
     title: 'Review Access Logs',
     description: 'Verify recent sign-ins and confirm policy compliance.',
-    href: '/admin/dashboard/auth/login',
-    cta: 'Open auth tools',
+    href: '/auth/login',
+    cta: 'OPEN AUTH TOOLS',
   },
   {
     title: 'Manage Users',
     description: 'View user accounts, roles, and activity status.',
-    href: '/admin/users',
-    cta: 'View users',
+    href: '/users',
+    cta: 'VIEW USERS',
   },
   {
     title: 'Create Admin Account',
     description: 'Set up new administrator accounts with proper verification.',
-    href: '/admin/users/create',
-    cta: 'Create admin',
+    href: '/users/create',
+    cta: 'CREATE ADMIN',
   },
 ];
 
@@ -64,17 +64,17 @@ const recentActivity = [
   {
     title: 'Access token rotated',
     detail: 'ops-lead rotated admin JWT secret',
-    timestamp: '5 minutes ago',
+    timestamp: '5m ago',
   },
   {
     title: 'Moderator role updated',
     detail: 'grapefruit promoted to senior reviewer',
-    timestamp: '32 minutes ago',
+    timestamp: '32m ago',
   },
   {
     title: 'Account flagged for abuse',
     detail: 'auto-detected high rejection ratio',
-    timestamp: '1 hour ago',
+    timestamp: '1h ago',
   },
   {
     title: 'Observation runbook updated',
@@ -89,161 +89,160 @@ interface AdminOverviewProps {
 
 export default function AdminOverview({ activeNav = 'dashboard' }: AdminOverviewProps) {
   return (
-    <div className="min-h-screen bg-background">
-      <Header />
-      <div className="flex">
+    <div className="min-h-screen bg-[var(--background)] text-[var(--foreground)] font-sans selection:bg-white/20">
+      <div className="flex h-screen overflow-hidden">
         <Sidebar activeItem={activeNav} />
-        <main className="flex-1 p-6 space-y-6">
-          <section className="bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-2xl p-6">
-            <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-              <div>
-                <p className="text-sm uppercase tracking-widest text-white/70">Admin Control Center</p>
-                <h1 className="text-3xl font-semibold mt-1">Keep platform health and member access in check</h1>
-                <p className="mt-3 text-white/80">
-                  Track what requires moderation today and jump straight into the workflows that need attention.
-                </p>
-              </div>
-              <Link
-                href="/admin/dashboard/auth/login"
-                className="inline-flex items-center justify-center rounded-xl bg-white/20 px-5 py-3 text-sm font-medium hover:bg-white/30"
-              >
-                Review credentials
-              </Link>
-            </div>
-          </section>
 
-          <section className="grid gap-4 md:grid-cols-3">
-            {highlightStats.map((stat) => (
-              <div key={stat.label} className="rounded-2xl border border-gray-200 bg-white p-4 dark:border-gray-800 dark:bg-gray-900">
-                <p className="text-sm text-gray-500 dark:text-gray-400">{stat.label}</p>
-                <p className="mt-2 text-3xl font-semibold text-foreground">{stat.value}</p>
-                <p className="text-sm text-gray-500 dark:text-gray-400">{stat.helper}</p>
-              </div>
-            ))}
-          </section>
+        <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
+          <Header />
 
-          <section className="grid gap-6 lg:grid-cols-2">
-            <div className="rounded-2xl border border-gray-200 bg-white p-6 dark:border-gray-800 dark:bg-gray-900">
-              <div className="flex items-center justify-between">
+          <main className="flex-1 overflow-y-auto p-8 scrollbar-hide">
+            <div className="max-w-7xl mx-auto space-y-12">
+
+              {/* Editorial Header */}
+              <div className="flex justify-between items-end border-b border-[var(--border-color)] pb-6">
                 <div>
-                  <h2 className="text-lg font-semibold text-foreground">Quick actions</h2>
-                  <p className="text-sm text-gray-500 dark:text-gray-400">
-                    High-confidence tasks that usually need attention every day.
+                  <h2 className="text-[10px] font-bold tracking-[0.2em] text-[var(--foreground)]/40 uppercase mb-3">Server Administration</h2>
+                  <h1 className="text-3xl md:text-5xl font-serif font-light text-[var(--foreground)] tracking-tight">
+                    Windeath44 <span className="italic text-[var(--foreground)]/30">Overview</span>
+                  </h1>
+                </div>
+                <div className="text-right hidden md:block">
+                  <p className="text-[10px] font-medium tracking-widest text-[var(--foreground)]/30 uppercase mb-1">
+                    {new Date().toLocaleDateString('en-US', { weekday: 'long' })}
+                  </p>
+                  <p className="text-sm font-serif text-[var(--foreground)]/60">
+                    {new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
                   </p>
                 </div>
               </div>
-              <div className="mt-4 space-y-4">
-                {quickActions.map((action) => (
-                  <div key={action.title} className="rounded-xl border border-gray-200 p-4 dark:border-gray-700">
-                    <p className="font-medium text-foreground">{action.title}</p>
-                    <p className="text-sm text-gray-500 dark:text-gray-400">{action.description}</p>
-                    <Link
-                      href={action.href}
-                      className="mt-3 inline-flex items-center text-sm font-medium text-blue-600 hover:underline"
-                    >
-                      {action.cta}
+
+              {/* Hero Section */}
+              <div className="relative h-[360px] overflow-hidden group rounded-xl">
+                <div
+                  className="absolute inset-0 bg-cover bg-center transition-transform duration-1000 group-hover:scale-105 grayscale opacity-60 group-hover:grayscale-0 group-hover:opacity-100"
+                  style={{ backgroundImage: 'var(--bg-hero)' }}
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-[var(--background)] via-[var(--background)]/80 to-[var(--background)]/40" />
+                <div className="absolute inset-0 bg-gradient-to-r from-[var(--background)] via-transparent to-[var(--background)]/60" />
+
+                <div className="relative h-full flex flex-col justify-end pb-10 px-4 z-10">
+                  <div className="inline-flex items-center gap-2 mb-4">
+                    <div className="w-1.5 h-1.5 rounded-full bg-emerald-500/80" />
+                    <span className="text-[10px] font-medium tracking-[0.2em] text-[var(--foreground)]/60 uppercase">System Operational</span>
+                  </div>
+
+                  <h1 className="text-4xl md:text-6xl font-light text-[var(--foreground)] mb-4 tracking-tighter font-serif max-w-3xl">
+                    Command Center <span className="block text-lg md:text-xl font-sans font-light text-[var(--foreground)]/50 mt-2 tracking-normal">Real-time monitoring and administration interface.</span>
+                  </h1>
+                </div>
+              </div>
+
+              {/* Stats Grid */}
+              <section className="relative overflow-hidden rounded-xl">
+                <div
+                  className="absolute inset-0 bg-cover bg-center opacity-15 grayscale"
+                  style={{ backgroundImage: 'var(--bg-stats)' }}
+                />
+                <div className="absolute inset-0 bg-gradient-to-b from-[var(--background)] via-[var(--background)]/95 to-[var(--background)]" />
+                <div className="absolute inset-0 bg-gradient-to-r from-[var(--background)]/90 via-transparent to-[var(--background)]/90" />
+
+                <div className="relative grid gap-px bg-[var(--border-color)] border border-[var(--border-color)] overflow-hidden">
+                  {highlightStats.map((stat) => (
+                    <div key={stat.label} className="bg-[var(--background)] p-8 group hover:bg-[var(--foreground)]/5 transition-colors">
+                      <p className="text-[10px] font-bold tracking-[0.2em] text-[var(--foreground)]/30 mb-4 uppercase">{stat.label}</p>
+                      <div className="flex items-baseline gap-3">
+                        <p className="text-4xl font-light text-[var(--foreground)] tracking-tighter">{stat.value}</p>
+                        <p className={`text-[10px] font-bold tracking-widest uppercase ${stat.color === 'text-red-400' ? 'text-red-500/70' : 'text-[var(--foreground)]/40'}`}>{stat.helper}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </section>
+
+              <div className="grid gap-12 lg:grid-cols-2">
+                {/* Quick Actions */}
+                <section>
+                  <div className="flex items-center justify-between mb-6 border-b border-[var(--border-color)] pb-2">
+                    <h2 className="text-sm font-medium tracking-widest text-[var(--foreground)]/60 uppercase">Quick Actions</h2>
+                  </div>
+                  <div className="space-y-1">
+                    {quickActions.map((action) => (
+                      <Link key={action.title} href={action.href} className="group block p-4 -mx-4 hover:bg-[var(--foreground)]/5 transition-colors rounded-lg">
+                        <div className="flex justify-between items-center">
+                          <div>
+                            <p className="text-lg font-light text-[var(--foreground)] mb-1 group-hover:underline decoration-[var(--foreground)]/30 underline-offset-4 transition-all">{action.title}</p>
+                            <p className="text-xs text-[var(--foreground)]/30 font-light">{action.description}</p>
+                          </div>
+                          <svg className="w-4 h-4 text-[var(--foreground)]/20 group-hover:text-[var(--foreground)]/60 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                          </svg>
+                        </div>
+                      </Link>
+                    ))}
+                  </div>
+                </section>
+
+                {/* Recent Activity */}
+                <section>
+                  <div className="flex items-center justify-between mb-6 border-b border-[var(--border-color)] pb-2">
+                    <h2 className="text-sm font-medium tracking-widest text-[var(--foreground)]/60 uppercase">Audit Log</h2>
+                  </div>
+                  <div className="space-y-6">
+                    {recentActivity.map((activity, i) => (
+                      <div key={i} className="flex gap-4 items-baseline group">
+                        <span className="text-[10px] font-mono text-[var(--foreground)]/20 w-16 text-right">{activity.timestamp}</span>
+                        <div className="flex-1 border-l border-[var(--border-color)] pl-4 pb-2">
+                          <p className="text-sm font-medium text-[var(--foreground)]/80 mb-1">{activity.title}</p>
+                          <p className="text-xs text-[var(--foreground)]/30 font-light">{activity.detail}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </section>
+              </div>
+
+              {/* Observability */}
+              <section className="relative overflow-hidden rounded-xl">
+                <div
+                  className="absolute inset-0 bg-cover bg-center opacity-12 grayscale"
+                  style={{ backgroundImage: 'var(--bg-infra)' }}
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-[var(--background)] via-[var(--background)]/95 to-[var(--background)]/80" />
+                <div className="absolute inset-0 bg-gradient-to-r from-[var(--background)]/80 via-transparent to-[var(--background)]/80" />
+
+                <div className="relative p-8">
+                  <div className="flex items-center justify-between mb-6 border-b border-[var(--border-color)] pb-2">
+                    <h2 className="text-sm font-medium tracking-widest text-[var(--foreground)]/60 uppercase">Infrastructure</h2>
+                    <Link href="/observability" className="text-[10px] font-bold text-[var(--foreground)]/30 hover:text-[var(--foreground)] tracking-[0.2em] uppercase transition-colors">
+                      View All
                     </Link>
                   </div>
-                ))}
-              </div>
-            </div>
-
-            <div className="rounded-2xl border border-gray-200 bg-white p-6 dark:border-gray-800 dark:bg-gray-900">
-              <div className="flex items-center justify-between">
-                <div>
-                  <h2 className="text-lg font-semibold text-foreground">Recent activity</h2>
-                  <p className="text-sm text-gray-500 dark:text-gray-400">Latest items that may require follow-up.</p>
-                </div>
-              </div>
-              <div className="mt-4 space-y-4">
-                {recentActivity.map((activity) => (
-                  <div key={activity.title} className="rounded-xl border border-dashed border-gray-200 p-4 dark:border-gray-700">
-                    <p className="font-medium text-foreground">{activity.title}</p>
-                    <p className="text-sm text-gray-500 dark:text-gray-400">{activity.detail}</p>
-                    <p className="text-xs text-gray-400 dark:text-gray-500">{activity.timestamp}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </section>
-
-          <section className="grid gap-6 lg:grid-cols-2">
-            <div className="rounded-2xl border border-gray-200 bg-white p-6 dark:border-gray-800 dark:bg-gray-900">
-              <div className="flex items-center justify-between">
-                <div>
-                  <h2 className="text-lg font-semibold text-foreground">User Management</h2>
-                  <p className="text-sm text-gray-500 dark:text-gray-400">
-                    Overview of platform users and administrative controls.
-                  </p>
-                </div>
-              </div>
-              <div className="mt-4 space-y-4">
-                <div className="grid gap-4 md:grid-cols-2">
-                  <div className="rounded-xl border border-gray-200 p-4 dark:border-gray-700">
-                    <p className="font-medium text-foreground">Total Users</p>
-                    <p className="text-2xl font-semibold text-blue-600">1,247</p>
-                    <p className="text-sm text-gray-500 dark:text-gray-400">+23 this week</p>
-                  </div>
-                  <div className="rounded-xl border border-gray-200 p-4 dark:border-gray-700">
-                    <p className="font-medium text-foreground">Admin Accounts</p>
-                    <p className="text-2xl font-semibold text-purple-600">8</p>
-                    <p className="text-sm text-gray-500 dark:text-gray-400">2 active today</p>
+                  <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-px bg-[var(--border-color)] border border-[var(--border-color)]">
+                    {observabilityLinks.map((tool) => (
+                      <a
+                        key={tool.title}
+                        href={tool.href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="group bg-[var(--background)] p-6 hover:bg-[var(--foreground)]/5 transition-colors aspect-square flex flex-col justify-between"
+                      >
+                        <div className="flex justify-between items-start">
+                          <p className="font-medium text-sm text-[var(--foreground)]/70 group-hover:text-[var(--foreground)] transition-colors">{tool.title}</p>
+                          <svg className="w-3 h-3 text-[var(--foreground)]/10 group-hover:text-[var(--foreground)]/40 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M4.5 19.5l15-15m0 0H8.25m11.25 0v11.25" />
+                          </svg>
+                        </div>
+                        <p className="text-[10px] text-[var(--foreground)]/20 group-hover:text-[var(--foreground)]/40 transition-colors leading-relaxed">{tool.description}</p>
+                      </a>
+                    ))}
                   </div>
                 </div>
-                <div className="flex gap-2">
-                  <Link
-                    href="/admin/users"
-                    className="flex-1 inline-flex items-center justify-center rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
-                  >
-                    View All Users
-                  </Link>
-                  <Link
-                    href="/admin/users/create"
-                    className="inline-flex items-center justify-center rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium hover:bg-gray-50 dark:border-gray-600 dark:hover:bg-gray-800"
-                  >
-                    Create Admin
-                  </Link>
-                </div>
-              </div>
-            </div>
+              </section>
 
-            <div className="rounded-2xl border border-gray-200 bg-white p-6 dark:border-gray-800 dark:bg-gray-900">
-              <div className="flex items-center justify-between">
-                <div>
-                  <h2 className="text-lg font-semibold text-foreground">Observability shortcuts</h2>
-                  <p className="text-sm text-gray-500 dark:text-gray-400">
-                    Jump to the external tools that now host cluster dashboards.
-                  </p>
-                </div>
-              </div>
-              <div className="mt-4 grid gap-3">
-                {observabilityLinks.slice(0, 4).map((tool) => (
-                  <a
-                    key={tool.title}
-                    href={tool.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="rounded-lg border border-gray-200 p-3 transition hover:border-blue-500 hover:bg-blue-50 dark:border-gray-700 dark:hover:border-blue-400 dark:hover:bg-blue-900/10 flex items-center justify-between"
-                  >
-                    <div>
-                      <p className="font-medium text-foreground text-sm">{tool.title}</p>
-                      <p className="text-xs text-gray-500 dark:text-gray-400">{tool.description}</p>
-                    </div>
-                    <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                    </svg>
-                  </a>
-                ))}
-                <Link
-                  href="/admin/observability"
-                  className="text-center text-sm text-blue-600 hover:underline py-2"
-                >
-                  View all tools →
-                </Link>
-              </div>
             </div>
-          </section>
-        </main>
+          </main>
+        </div>
       </div>
     </div>
   );
