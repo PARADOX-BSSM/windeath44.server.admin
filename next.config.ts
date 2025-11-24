@@ -3,7 +3,6 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   // Base path for all routes and assets
   basePath: '/admin/dashboard',
-  assetPrefix: '/admin/dashboard',
 
   // Output configuration for Docker builds
   output: 'standalone',
