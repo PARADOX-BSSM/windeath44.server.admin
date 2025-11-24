@@ -2,12 +2,14 @@
 
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { observabilityConfig } from '../../config/observability';
 
 interface NavItem {
   id: string;
   label: string;
   icon: React.ReactElement;
   href: string;
+  external?: boolean;
 }
 
 interface SidebarProps {
@@ -17,109 +19,193 @@ interface SidebarProps {
 
 const navItems: NavItem[] = [
   {
-    id: 'overview',
-    label: 'Overview',
-    href: 'https://prod.windeath44.wiki/admin/dashboard',
+    id: 'dashboard',
+    label: 'Dashboard',
+    href: '/',
     icon: (
       <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0h6" />
+      </svg>
+    ),
+  },
+  {
+    id: 'users',
+    label: 'Users',
+    href: '/users',
+    icon: (
+      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z" />
+      </svg>
+    ),
+  },
+  {
+    id: 'create-admin',
+    label: 'Create Admin',
+    href: '/users/create',
+    icon: (
+      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
       </svg>
     ),
   },
   {
     id: 'grafana',
     label: 'Grafana',
-    href: 'https://prod.windeath44.wiki/admin/grafana',
+    href: observabilityConfig.grafanaUrl,
+    external: true,
     icon: (
       <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M12 2a10 10 0 100 20 10 10 0 000-20z" />
+      </svg>
+    ),
+  },
+  {
+    id: 'argo-cd',
+    label: 'Argo CD',
+    href: observabilityConfig.argoCdUrl,
+    external: true,
+    icon: (
+      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 3v18m9-9H3" />
       </svg>
     ),
   },
   {
     id: 'kiali',
     label: 'Kiali',
-    href: 'https://prod.windeath44.wiki/admin/kiali',
+    href: observabilityConfig.kialiUrl,
+    external: true,
     icon: (
       <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 919-9"/>
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 12a9 9 0 01-9 9m0-18a9 9 0 00-9 9m18 0H3" />
       </svg>
     ),
   },
   {
-    id: 'jaeger',
-    label: 'Jaeger',
-    href: 'https://prod.windeath44.wiki/admin/jaeger',
+    id: 'prometheus',
+    label: 'Prometheus',
+    href: observabilityConfig.prometheusUrl,
+    external: true,
     icon: (
       <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
       </svg>
     ),
   },
   {
     id: 'kafka-ui',
     label: 'Kafka UI',
-    href: 'https://prod.windeath44.wiki/admin/kafka-ui',
+    href: observabilityConfig.kafkaUiUrl,
+    external: true,
     icon: (
       <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4"/>
-      </svg>
-    ),
-  },
-  {
-    id: 'applications',
-    label: 'Applications',
-    href: 'https://prod.windeath44.wiki/admin/dashboard/applications',
-    icon: (
-      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
-      </svg>
-    ),
-  },
-  {
-    id: 'services',
-    label: 'Services',
-    href: 'https://prod.windeath44.wiki/admin/dashboard/services',
-    icon: (
-      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h6l2 2h6a2 2 0 012 2v4a2 2 0 01-2 2H5z"/>
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4" />
       </svg>
     ),
   },
 ];
 
-export default function Sidebar({ activeItem = 'overview', onItemClick }: SidebarProps) {
+export default function Sidebar({ activeItem = 'dashboard', onItemClick }: SidebarProps) {
   const [active, setActive] = useState(activeItem);
+  const [isCollapsed, setIsCollapsed] = useState(false);
   const router = useRouter();
 
   const handleItemClick = (item: NavItem) => {
     setActive(item.id);
     onItemClick?.(item.id);
-    
-    // All items now use full URLs, so just redirect
-    if (item.href) {
-      window.location.href = item.href;
+
+    if (!item.href) return;
+
+    if (item.external || item.href.startsWith('http')) {
+      window.open(item.href, '_blank', 'noopener,noreferrer');
+      return;
     }
+
+    router.push(item.href);
+  };
+
+  const toggleCollapse = () => {
+    setIsCollapsed((prev) => !prev);
   };
 
   return (
-    <aside className="w-64 bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-800 min-h-[calc(100vh-73px)]">
-      <nav className="p-4 space-y-2">
-        {navItems.map((item) => (
+    <aside
+      className={`relative z-20 h-full transition-all duration-500 ease-[cubic-bezier(0.23,1,0.32,1)] ${isCollapsed ? 'w-20' : 'w-80'}`}
+    >
+      <div className="h-full flex flex-col bg-[var(--background)]/40 backdrop-blur-xl border-r border-[var(--border-color)]">
+        <div className="flex items-center justify-between px-8 py-8">
+          {!isCollapsed && (
+            <span className="text-[10px] font-bold tracking-[0.25em] text-[var(--foreground)]/40 uppercase font-sans">
+              Menu
+            </span>
+          )}
           <button
-            key={item.id}
-            onClick={() => handleItemClick(item)}
-            className={`w-full flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-lg transition-colors ${
-              active === item.id
-                ? 'text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20'
-                : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800'
-            }`}
+            type="button"
+            onClick={toggleCollapse}
+            aria-label={isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+            className="p-2 -mr-2 rounded-full text-[var(--foreground)]/20 hover:text-[var(--foreground)] hover:bg-[var(--foreground)]/5 transition-all duration-300"
           >
-            {item.icon}
-            {item.label}
+            <svg
+              className={`w-4 h-4 transition-transform duration-500 ${isCollapsed ? 'rotate-180' : ''}`}
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M15 19l-7-7 7-7" />
+            </svg>
           </button>
-        ))}
-      </nav>
+        </div>
+
+        <nav className="flex-1 px-4 space-y-2">
+          {navItems.map((item) => {
+            const isActive = active === item.id;
+            return (
+              <button
+                key={item.id}
+                onClick={() => handleItemClick(item)}
+                className={`w-full flex items-center px-4 py-4 text-sm font-medium rounded-lg transition-all duration-300 group relative overflow-hidden ${isCollapsed ? 'justify-center' : 'gap-5'
+                  } ${isActive
+                    ? 'text-[var(--foreground)] bg-[var(--foreground)]/[0.08] shadow-[inset_0_1px_0_0_rgba(255,255,255,0.05)]'
+                    : 'text-[var(--foreground)]/40 hover:text-[var(--foreground)] hover:bg-[var(--foreground)]/[0.02]'
+                  }`}
+              >
+                <span className={`relative z-10 transition-all duration-300 ${isActive ? 'text-[var(--foreground)] scale-110 drop-shadow-[0_0_8px_rgba(255,255,255,0.3)]' : 'group-hover:text-[var(--foreground)] group-hover:scale-105'}`}>
+                  {React.cloneElement(item.icon as React.ReactElement<any>, { strokeWidth: isActive ? 2 : 1.5 })}
+                </span>
+                {!isCollapsed && (
+                  <span className={`relative z-10 tracking-wide transition-all duration-300 ${isActive ? 'text-[var(--foreground)] font-medium' : 'font-light'}`}>
+                    {item.label}
+                  </span>
+                )}
+                {isActive && !isCollapsed && (
+                  <div className="absolute right-3 w-1.5 h-1.5 rounded-full bg-[var(--foreground)] shadow-[0_0_10px_rgba(255,255,255,0.8)]" />
+                )}
+                {isCollapsed && <span className="sr-only">{item.label}</span>}
+              </button>
+            );
+          })}
+        </nav>
+
+        <div className="p-6">
+          <div className={`relative overflow-hidden rounded-lg border border-[var(--border-color)] bg-[var(--foreground)]/[0.02] p-5 transition-all duration-500 ${isCollapsed ? 'opacity-0 translate-y-4 pointer-events-none' : 'opacity-100 translate-y-0'}`}>
+            <div className="flex items-center justify-between mb-3">
+              <p className="text-[10px] font-bold tracking-[0.2em] text-[var(--foreground)]/30 uppercase">Status</p>
+              <div className="flex items-center gap-1.5">
+                <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.4)] animate-pulse" />
+                <span className="text-[10px] font-medium text-emerald-500/80 tracking-wider">LIVE</span>
+              </div>
+            </div>
+            <div className="space-y-1">
+              <div className="h-px w-full bg-gradient-to-r from-[var(--foreground)]/10 to-transparent" />
+              <p className="text-xs font-light text-[var(--foreground)]/60 pt-2 leading-relaxed">
+                System operational.
+                <br />
+                No active incidents.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
     </aside>
   );
 }

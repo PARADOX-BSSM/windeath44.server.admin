@@ -13,9 +13,9 @@ export async function GET() {
         total: Math.round(process.memoryUsage().heapTotal / 1024 / 1024),
         external: Math.round(process.memoryUsage().external / 1024 / 1024),
       },
-      kubernetes: {
-        namespace: process.env.NEXT_PUBLIC_K8S_NAMESPACE || 'monitoring',
-        serviceAccount: process.env.K8S_SERVICE_ACCOUNT || 'windeath44-admin',
+      services: {
+        memorialApi: process.env.MEMORIAL_API_URL || 'https://prod.windeath44.wiki/api',
+        authIssuer: process.env.JWT_ISSUER || 'windeath44',
       },
     };
 
