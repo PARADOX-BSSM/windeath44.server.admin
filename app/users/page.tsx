@@ -3,8 +3,8 @@
 import { useState, useEffect } from 'react';
 import { getAuthHeaders } from '@/app/lib/auth';
 import Link from 'next/link';
-import Header from '../../../components/ui/Header';
-import Sidebar from '../../../components/ui/Sidebar';
+import Header from '@/app/components/ui/Header';
+import Sidebar from '@/app/components/ui/Sidebar';
 
 interface User {
   userId: string;
