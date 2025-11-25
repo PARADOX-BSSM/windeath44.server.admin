@@ -9,7 +9,8 @@ export async function middleware(request: NextRequest) {
     pathname.startsWith('/_next') ||
     pathname.startsWith('/static') ||
     pathname.startsWith('/auth/login') ||
-    pathname === '/favicon.ico'
+    pathname === '/favicon.ico' ||
+    pathname === '/windeath44/windeath44.png'
   ) {
     return NextResponse.next();
   }
@@ -80,6 +81,6 @@ export const config = {
      * - favicon.ico (favicon file)
      * - auth/login (login page)
      */
-    '/((?!api|_next/static|_next/image|favicon.ico|auth/login).*)',
+    '/((?!_next/static|_next/image|favicon.ico|auth/login).*)',
   ],
 };
