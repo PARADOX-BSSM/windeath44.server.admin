@@ -1,6 +1,5 @@
 # Multi-stage build for production
-FROM node:18-alpine AS base
-
+FROM node:22-alpine AS base
 # Install Python and build tools for native dependencies
 RUN apk add --no-cache python3 make g++
 
