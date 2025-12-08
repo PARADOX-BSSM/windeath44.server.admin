@@ -137,13 +137,13 @@ export default function CreateAdminPage() {
       setLoading(true);
       // Note: This API endpoint might not exist yet, but we're implementing the frontend flow
       const response = await fetch('https://prod.windeath44.wiki/api/auth/email/valid', {
-        method: 'POST',
+        method: 'PATCH',
         headers: {
           ...getAuthHeaders(),
         },
         body: JSON.stringify({
           email: formData.email,
-          code: emailVerificationCode,
+          authorizationCode: emailVerificationCode,
         }),
       });
 
