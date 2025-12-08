@@ -4,18 +4,23 @@ import type { NextRequest } from 'next/server';
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // 정적 자원 및 로그인 페이지는 미들웨어 체크 제외 (matcher에서도 처리하지만 이중 안전장치)
+  console.log('Middleware: Pathname:', pathname);
+
+  // 정적 자원 및 로그인 페이지는 미들웨어 체크 제외
+  // basePath가 설정되어 있어도 pathname은 basePath가 제거된 상태로 들어옵니다(Next.js default).
+  // 하지만 확실한 처리를 위해 여러 케이스를 방어적으로 처리합니다.
   if (
     pathname.startsWith('/_next') ||
     pathname.startsWith('/static') ||
     pathname.startsWith('/auth/login') ||
+    pathname === '/auth/login' || // Explicit match
     pathname === '/favicon.ico' ||
     pathname === '/windeath44/windeath44.png'
   ) {
     return NextResponse.next();
   }
 
-  console.log('Middleware: Checking auth for:', pathname);
+  console.log('Middleware: Checking auth for protected route:', pathname);
 
   // auth_token 쿠키 확인
   const token = request.cookies.get('auth_token')?.value;
@@ -23,9 +28,9 @@ export async function middleware(request: NextRequest) {
   if (!token) {
     console.log('Middleware: No token found, redirecting to login');
     const loginUrl = new URL('/admin/dashboard/auth/login', request.url);
-    // 로그인 후 원래 페이지로 돌아오기 위해 callbackUrl 추가 가능 (선택 사항)
-    // loginUrl.searchParams.set('callbackUrl', pathname);
-    return NextResponse.redirect(loginUrl);
+    const response = NextResponse.redirect(loginUrl);
+    response.headers.set('X-Middleware-Reason', 'missing-token');
+    return response;
   }
 
   // 서버 사이드에서 토큰 검증 및 ADMIN 역할 확인
@@ -44,6 +49,7 @@ export async function middleware(request: NextRequest) {
       const loginUrl = new URL('/admin/dashboard/auth/login', request.url);
       const redirectResponse = NextResponse.redirect(loginUrl);
       redirectResponse.cookies.set('auth_token', '', { expires: new Date(0) });
+      redirectResponse.headers.set('X-Middleware-Reason', `api-error-${response.status}`);
       return redirectResponse;
     }
 
@@ -56,6 +62,7 @@ export async function middleware(request: NextRequest) {
       loginUrl.searchParams.set('access_denied', 'true');
       const redirectResponse = NextResponse.redirect(loginUrl);
       redirectResponse.cookies.set('auth_token', '', { expires: new Date(0) });
+      redirectResponse.headers.set('X-Middleware-Reason', 'role-mismatch');
       return redirectResponse;
     }
 
@@ -67,6 +74,7 @@ export async function middleware(request: NextRequest) {
     const loginUrl = new URL('/admin/dashboard/auth/login', request.url);
     const redirectResponse = NextResponse.redirect(loginUrl);
     redirectResponse.cookies.set('auth_token', '', { expires: new Date(0) });
+    redirectResponse.headers.set('X-Middleware-Reason', 'validation-exception');
     return redirectResponse;
   }
 }
