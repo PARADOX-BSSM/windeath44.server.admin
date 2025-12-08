@@ -1,10 +1,11 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { getAuthHeaders } from '@/app/lib/auth';
+import { getAuthHeaders, getAuthToken } from '@/app/lib/auth';
 import Link from 'next/link';
 import Header from '@/app/components/ui/Header';
 import Sidebar from '@/app/components/ui/Sidebar';
+import { jwtDecode } from 'jwt-decode';
 
 interface User {
   userId: string;
@@ -28,6 +29,13 @@ interface UserListResponse {
 interface ApiResponse {
   message: string;
   data: UserListResponse;
+}
+
+interface DecodedToken {
+  sub: string;
+  role: string;
+  exp: number;
+  // add other fields if necessary
 }
 
 export default function UsersPage() {
@@ -85,6 +93,77 @@ export default function UsersPage() {
     fetchUsers();
   };
 
+  const handleRoleChange = async (userId: string, newRole: string) => {
+    if (newRole === 'ADMIN') {
+      handlePromoteToAdmin(userId);
+    } else if (newRole === 'USER') {
+      handleDemoteToUser(userId);
+    } else {
+      alert('Changing to this role is not supported.');
+      fetchUsers(); // Refresh to reset the dropdown
+    }
+  };
+
+  const handlePromoteToAdmin = async (userId: string) => {
+    if (!confirm(`Are you sure you want to promote user ${userId} to ADMIN?`)) {
+      fetchUsers(); // Revert selection
+      return;
+    }
+
+    try {
+      const response = await fetch(`https://prod.windeath44.wiki/api/users/role/admin/${userId}`, {
+        method: 'PATCH',
+        headers: {
+          ...getAuthHeaders(),
+        },
+        body: JSON.stringify({}),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to promote user');
+      }
+
+      fetchUsers();
+    } catch (err) {
+      alert(err instanceof Error ? err.message : 'Failed to promote user');
+      fetchUsers();
+    }
+  };
+
+  const handleDemoteToUser = async (userId: string) => {
+    if (!confirm(`Are you sure you want to demote user ${userId} to USER?`)) {
+      fetchUsers(); // Revert selection
+      return;
+    }
+
+    try {
+      const token = getAuthToken();
+      if (!token) throw new Error("No auth token found");
+
+      const decoded = jwtDecode<DecodedToken>(token);
+
+      const response = await fetch(`https://prod.windeath44.wiki/api/users/role/user/${userId}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          'user-id': decoded.sub || '',
+          'role': decoded.role || '',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({}),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to demote user');
+      }
+
+      fetchUsers();
+    } catch (err) {
+      alert(err instanceof Error ? err.message : 'Failed to demote user');
+      fetchUsers();
+    }
+  };
+
   const handleDeleteUser = async (userId: string) => {
     if (!confirm(`Are you sure you want to delete user ${userId}?`)) {
       return;
@@ -132,16 +211,18 @@ export default function UsersPage() {
                     User <span className="font-bold italic">Management</span>
                   </h1>
                 </div>
-                <Link
-                  href="/users/create"
-                  className="group relative px-6 py-3 bg-[var(--foreground)] text-xs font-bold tracking-[0.2em] rounded-xl hover:scale-105 transition-all duration-300 shadow-[0_0_20px_rgba(0,0,0,0.1)] hover:shadow-[0_0_30px_rgba(0,0,0,0.2)] overflow-hidden uppercase flex items-center gap-3 border border-[var(--foreground)]/10 btn-text-inverse"
-                >
-                  <span className="relative z-10">Create Admin</span>
-                  <svg className="w-3 h-3 relative z-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4" />
-                  </svg>
-                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700" />
-                </Link>
+                <div className="flex gap-4">
+                  <Link
+                    href="/users/create"
+                    className="group relative px-6 py-3 bg-[var(--foreground)] text-xs font-bold tracking-[0.2em] rounded-xl hover:scale-105 transition-all duration-300 shadow-[0_0_20px_rgba(0,0,0,0.1)] hover:shadow-[0_0_30px_rgba(0,0,0,0.2)] overflow-hidden uppercase flex items-center gap-3 border border-[var(--foreground)]/10 btn-text-inverse"
+                  >
+                    <span className="relative z-10">Create Admin</span>
+                    <svg className="w-3 h-3 relative z-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4" />
+                    </svg>
+                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700" />
+                  </Link>
+                </div>
               </div>
 
               {/* Stats Overview */}
@@ -193,10 +274,8 @@ export default function UsersPage() {
                       >
                         <option value="" className="bg-[var(--background)] text-[var(--foreground)]">All Roles</option>
                         <option value="ADMIN" className="bg-[var(--background)] text-[var(--foreground)]">Admin</option>
-                        <option value="CHIEF" className="bg-[var(--background)] text-[var(--foreground)]">Chief</option>
                         <option value="USER" className="bg-[var(--background)] text-[var(--foreground)]">User</option>
                         <option value="TESTER" className="bg-[var(--background)] text-[var(--foreground)]">Tester</option>
-                        <option value="ANONYMOUS" className="bg-[var(--background)] text-[var(--foreground)]">Anonymous</option>
                       </select>
                       <div className="absolute inset-y-0 right-0 flex items-center px-3 pointer-events-none text-[var(--foreground)]/30">
                         <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" /></svg>
@@ -295,13 +374,26 @@ export default function UsersPage() {
                               </td>
                               <td className="py-4 px-6 text-xs text-[var(--foreground)]/60 font-light">{user.email}</td>
                               <td className="py-4 px-6">
-                                <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold tracking-wider uppercase border ${user.role === 'ADMIN' ? 'bg-purple-500/10 text-purple-400 border-purple-500/20 shadow-[0_0_10px_rgba(168,85,247,0.2)]' :
-                                  user.role === 'CHIEF' ? 'bg-blue-500/10 text-blue-400 border-blue-500/20 shadow-[0_0_10px_rgba(59,130,246,0.2)]' :
-                                    user.role === 'USER' ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' :
-                                      'bg-[var(--foreground)]/5 text-[var(--foreground)]/40 border-[var(--border-color)]'
-                                  }`}>
-                                  {user.role}
-                                </span>
+                                <div className="relative inline-block w-32">
+                                  <select
+                                    value={user.role}
+                                    onChange={(e) => handleRoleChange(user.userId, e.target.value)}
+                                    className={`appearance-none w-full px-3 py-1.5 rounded-full text-[10px] font-bold tracking-wider uppercase border cursor-pointer focus:outline-none transition-all ${user.role === 'ADMIN' ? 'bg-purple-500/10 text-purple-400 border-purple-500/20 hover:border-purple-500/50' :
+                                      user.role === 'CHIEF' ? 'bg-blue-500/10 text-blue-400 border-blue-500/20 hover:border-blue-500/50' :
+                                        user.role === 'USER' ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20 hover:border-emerald-500/50' :
+                                          'bg-[var(--foreground)]/5 text-[var(--foreground)]/40 border-[var(--border-color)] hover:border-[var(--foreground)]/20'
+                                      }`}
+                                  >
+                                    <option value="ADMIN" className="bg-[var(--background)] text-[var(--foreground)]">Admin</option>
+                                    <option value="USER" className="bg-[var(--background)] text-[var(--foreground)]">User</option>
+                                    <option value="TESTER" className="bg-[var(--background)] text-[var(--foreground)]">Tester</option>
+                                  </select>
+                                  <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-[var(--foreground)]/40">
+                                    <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+                                    </svg>
+                                  </div>
+                                </div>
                               </td>
                               <td className="py-4 px-6">
                                 <div className="flex items-center gap-2">
